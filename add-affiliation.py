@@ -21,9 +21,10 @@ for file in files:
       mods = ET.parse(targetdir + "/" + file)
       namespaces = {'mods': 'http://www.loc.gov/mods/v3'}
       ET.register_namespace('', "http://www.loc.gov/mods/v3")
-      ET.register_namespace('mods', "http://www.loc.gov/mods/v3")
+      ET.register_namespace('dcterms', "http://purl.org/dc/terms/")
       ET.register_namespace('etd', "http://www.ndltd.org/standards/metadata/etdms/1.0/")
       ET.register_namespace('flvc', "info:flvc/manifest/v1")
+      ET.register_namespace('xlink', "http://www.w3.org/1999/xlink")
       root = mods.getroot()
 
       # Find name element of the author
@@ -35,7 +36,7 @@ for file in files:
               affiliation_node.text = affiliation
               name.append(affiliation_node)
 
-      mods.write(processeddir + "/" + file)
+      mods.write(processeddir + "/" + file, encoding='utf-8', xml_declaration=True)
     
     except:
       print(file + " is not wellformed. Please fix.")
