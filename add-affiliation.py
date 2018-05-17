@@ -31,13 +31,22 @@ for file in files:
       for name in root.findall('mods:name', namespaces):
         for role in name.findall('mods:role', namespaces):
           for roleTerm in role.findall('mods:roleTerm', namespaces):
-            if roleTerm.attrib['type'] == 'text' and roleTerm.text == 'author':
+            if roleTerm.attrib['type'] == 'text' and roleTerm.text == 'author' or roleTerm.text == 'creator':
               affiliation_node = ET.Element("{http://www.loc.gov/mods/v3}affiliation")
               affiliation_node.text = affiliation
               name.append(affiliation_node)
+              
+      # Find name element usage=primary for the older records
+      for name in root.findall('mods:name', namespaces):
+        usage = name.get('usage')
+        if usage == 'primary':
+          affiliation_node = ET.Element("{http://www.loc.gov/mods/v3}affiliation")
+          affiliation_node.text = affiliation
+          name.append(affiliation_node)
 
       mods.write(processeddir + "/" + file, encoding='utf-8', xml_declaration=True)
-    
+      print(file + " is Done!")
+  
     except:
       print(file + " is not wellformed. Please fix.")
       sys.exit()
